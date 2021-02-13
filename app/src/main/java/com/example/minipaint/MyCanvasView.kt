@@ -20,4 +20,9 @@ class MyCanvasView(context: Context): View(context) {
         extraCanvas = Canvas(extraBitmap)
         extraCanvas.drawColor(backgroundColor)
     }
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        canvas?.drawBitmap(extraBitmap, 0F, 0F, null)
+    }
 }

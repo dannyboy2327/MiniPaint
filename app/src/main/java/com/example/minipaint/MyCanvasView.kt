@@ -7,7 +7,9 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import androidx.core.content.res.ResourcesCompat
+import kotlin.math.abs
 
 private const val STROKE_WIDTH = 12F
 
@@ -40,6 +42,9 @@ class MyCanvasView(context: Context): View(context) {
     private var currentX = 0f
     private var currentY = 0f
 
+    private val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
+
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (::extraBitmap.isInitialized) extraBitmap.recycle()
@@ -57,7 +62,7 @@ class MyCanvasView(context: Context): View(context) {
         motionTouchEventX = event?.x!!
         motionTouchEventY = event.y
 
-        when (event?.action) {
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> touchStart()
             MotionEvent.ACTION_MOVE -> touchMove()
             MotionEvent.ACTION_UP -> touchUp()
@@ -70,7 +75,16 @@ class MyCanvasView(context: Context): View(context) {
     }
 
     private fun touchMove() {
-        TODO("Not yet implemented")
+        val dx = abs(motionTouchEventX - currentX)
+        val dy = abs(motionTouchEventY - currentY)
+        if (dx >= touchTolerance || dy >= touchTolerance) {
+            path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) /2)
+            currentX = motionTouchEventX
+            currentY = motionTouchEventY
+
+            extraCanvas.drawPath(path, paint)
+        }
+        invalidate()
     }
 
     private fun touchStart() {

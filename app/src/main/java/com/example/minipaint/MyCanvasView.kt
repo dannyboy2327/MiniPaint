@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 
@@ -33,6 +34,9 @@ class MyCanvasView(context: Context): View(context) {
 
     private var path = Path()
 
+    private var motionTouchEventX = 0F
+    private var motionTouchEventY = 0F
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (::extraBitmap.isInitialized) extraBitmap.recycle()
@@ -44,5 +48,29 @@ class MyCanvasView(context: Context): View(context) {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.drawBitmap(extraBitmap, 0F, 0F, null)
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        motionTouchEventX = event?.x!!
+        motionTouchEventY = event.y
+
+        when (event?.action) {
+            MotionEvent.ACTION_DOWN -> touchStart()
+            MotionEvent.ACTION_MOVE -> touchMove()
+            MotionEvent.ACTION_UP -> touchUp()
+        }
+        return true
+    }
+
+    private fun touchUp() {
+        TODO("Not yet implemented")
+    }
+
+    private fun touchMove() {
+        TODO("Not yet implemented")
+    }
+
+    private fun touchStart() {
+        TODO("Not yet implemented")
     }
 }
